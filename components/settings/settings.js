@@ -78,7 +78,7 @@ export default function ({ canvas,saveState }) {
         }
     }, [canvas])
 
-
+console.log(diameter)
     if (selected) {
         return (
             <>
