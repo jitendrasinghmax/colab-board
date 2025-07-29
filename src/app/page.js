@@ -5,6 +5,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div>
+      <div>welcode to my app</div>
       <Link href="/draw">start drawing</Link>
     </div>
   );
