@@ -1,0 +1,16 @@
+  /* radus */
+  .rounded-sm{
+    border-radius: 5px;
+  }
+  .rounded-md{
+    border-radius: 10px;
+  }
+  .rounded-lg{
+    border-radius: 20px;
+  }
+  .rounded-xl{
+    border-radius: 30px;
+  }
+  .rounded-full{
+    border-radius: 100%;
+  }
