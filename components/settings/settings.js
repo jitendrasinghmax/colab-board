@@ -165,7 +165,6 @@ export default function ({ canvas, saveState }) {
             })
         }
     }, [canvas])
-    console.log(brushProps)
     if (selected) {
         return (
             <>

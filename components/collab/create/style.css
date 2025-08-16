@@ -1,0 +1,53 @@
+.createDialog{
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 200px;
+    width: 400px;
+    background-color: rgb(40, 36, 36);
+      box-shadow: 0px 0px 5px rgba(51, 50, 50, 0.3);
+    border: 2px solid rgb(97, 90, 90);
+    border-radius: 10px;
+    padding: 20px;
+    z-index: 100;
+    h1{
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        text-align: center;
+        color:rgb(80, 136, 241);
+        font-family: Helvetica;
+    }
+    h2{
+        font-size: 10px;
+        margin-bottom: 10px;
+        text-align: center;
+        font-family: Helvetica;
+        color:rgb(198, 194, 194);
+    }
+}
+    .session-btn{
+        width: 80%;
+        height: 30px;
+        background-color: rgb(80, 136, 241);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        display: block;
+        margin: 20px auto 0 auto;
+    }
+    .close-btn{
+        
+        height:35px;
+        background-color: rgb(255, 255, 255);
+  color: black;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px rgba(0,0,0,0.3);
+  cursor: pointer;
+  display: block;
+  margin: 10px auto;
+    }

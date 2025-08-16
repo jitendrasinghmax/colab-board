@@ -3,6 +3,10 @@
   @import "../../style/radius.css";
   @import "../../style/grid.css";
 
+body{
+  margin: 0;
+}
+
   .border{
     border:2px solid rgb(209, 206, 206)
   }
@@ -264,3 +268,15 @@ background-image: radial-gradient(
   color:white;
 }
 
+.share-btn{
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: rgb(255, 255, 255);
+  color: black;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px rgba(0,0,0,0.3);
+  cursor: pointer;
+  z-index: 1000;
+}

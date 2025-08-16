@@ -22,6 +22,15 @@ export const createBoard = mutation({
     },
     handler: async (ctx, args) => {
       // Insert a new document into the "board" table
+        const existing = await ctx.db
+      .query("board")
+      .filter((q) => q.eq(q.field("roomId"), args.roomId))
+      .first();
+
+    if (existing) {
+      return null; // Already exists
+    }
+
       const boardId = await ctx.db.insert("board", {
         admin: args.admin,
         roomId: args.roomId,
@@ -45,7 +54,6 @@ export const createBoard = mutation({
             .query("board")
             .withIndex("by_roomId", (q) => q.eq("roomId", roomId))
             .unique(); // Expecting a single unique result
-
         if (!boardToUpdate) {
             throw new Error(`Board with roomId '${roomId}' not found.`); //
         }

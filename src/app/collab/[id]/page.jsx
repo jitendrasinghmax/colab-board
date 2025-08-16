@@ -4,12 +4,14 @@ import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { useEffect, useRef, useState } from "react";
 import * as fabric from 'fabric'; // v6
+import { useParams } from "next/navigation";
 
 export default function ReadOnlyBoard() {
+  const params=useParams();
   const canvasRef = useRef(null);
   const [canvas, setCanvas] = useState(null);
 
-  const board = useQuery(api.board.getBoard, {roomId:"999"});
+  const board = useQuery(api.board.getBoard, {roomId:params.id});
  
   // init canvas once
     useEffect(() => {

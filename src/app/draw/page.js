@@ -12,16 +12,35 @@ import Settings from '../../../components/settings/settings';
 import useHistory from '../../../hook/useHistory';
 import { addCircle, addRect } from "../../../lib/create/shape";
 import { addText } from "../../../lib/create/text";
-
+import Session from "../../../components/collab/create/session";
+import { render } from "../../../lib/render/render";
+import { useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 export default function () {
     const canvasRef = useRef(null)
     const fabricRef=useRef(null);
+    const updateConvexState=useMutation(api.board.updateBoardState);
     const [canvas, setCanvas] = useState(null)
     const [isDrawing,setIsDrawing]=useState(false);
+    const [openDialog,setOpenDialog]=useState(false);
+    const [isCollab,setIsCollab]=useState({
+        isCollab:false,
+        roomId:"0"
+    });
 
-    const { undo, redo, saveState } = useHistory();
+    const {currState, undo, redo, saveState } = useHistory();
 
+    const updateConvexStateHandler = async () => {
+        console.log("updateConvexStateHandler called");
+        if(isCollab.isCollab===true && isCollab.roomId!=="0"){
+            console.log("Updating convex state for roomId:", isCollab.roomId);
+            await updateConvexState({
+                roomId: isCollab.roomId,
+                newState: JSON.stringify(currState)
+            });
+        }
+    }
    
     const handelRedo = function () {
         const state = redo();
@@ -30,8 +49,8 @@ export default function () {
             canvas.off("object:removed");
             canvas.loadFromJSON(state).then(() => {
                 canvas.renderAll();
-                canvas.on("object:added",()=>saveState(canvas) );
-                canvas.on("object:removed", ()=>saveState(canvas));
+                canvas.on("object:added",()=>render(canvas, saveState));
+                canvas.on("object:removed", ()=>render(canvas, saveState));
             });
         }
     }
@@ -42,8 +61,8 @@ export default function () {
             canvas.off("object:removed");
             canvas.loadFromJSON(state).then(() => {
                 canvas.renderAll();
-                canvas.on("object:added",()=>saveState(canvas) );
-                canvas.on("object:removed", ()=>saveState(canvas));
+                canvas.on("object:added",()=>render(canvas, saveState));
+                canvas.on("object:removed", ()=>render(canvas, saveState));
             });
         }
     };
@@ -71,13 +90,13 @@ export default function () {
                         color:"black",
                   });
             canvas.on("object:modified",()=>{
-                saveState(canvas)
+                render(canvas, saveState);
             });
             canvas.on("object:added", ()=>{
-                saveState(canvas)
+                render(canvas, saveState);
             });
             canvas.on("object:removed",()=>{
-                saveState(canvas)
+                render(canvas, saveState);
             });
         }
        
@@ -100,10 +119,18 @@ export default function () {
             fabricRef.current.dispose();
             fabricRef.current = null;
         }
+        
         }
     }, [])
+    useEffect(()=>{
+        if(currState&&canvas){
+            updateConvexStateHandler();
+        }
+    },[currState])
     return (
         <>
+            {openDialog==true&&<Session isCollab={isCollab} setIsCollab={setIsCollab} setOpenDialog={setOpenDialog}/>}
+            <button className="share-btn" onClick={()=>setOpenDialog(true)}>share</button>
             <div id="container" className=''>
                 <div className="tool">
                     <button className='tool-button' onClick={()=>addRect(canvas)}><RiRectangleLine /></button>

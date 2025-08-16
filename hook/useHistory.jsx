@@ -1,48 +1,46 @@
-import { useMutation } from "convex/react";
-import { api } from "../convex/_generated/api";
-import { useRef } from "react";
+
+import { useState, useEffect, useRef, use } from "react";
+import { set } from "mongoose";
 
 function useHistory() {
-  const updateConvexState = useMutation(api.board.updateBoardState);
-  const historyRef = useRef([]); // persist across renders
-  const currRef = useRef(-1);    // persist across renders
-
-  async function updateState() {
-    await updateConvexState({
-      roomId: "999",
-      newState: JSON.stringify(historyRef.current[currRef.current])
-    });
-  }
+  const [history, setHistory] = useState([]);
+  const [currState, setCurrState] = useState({});
+  const curr = useRef(-1);
 
   function saveState(canvas) {
-    if (currRef.current < historyRef.current.length - 1) {
-      historyRef.current = historyRef.current.slice(0, currRef.current + 1);
+    if (curr.current === -1) {
+      setHistory([ canvas.toJSON()]);
+    } else if (curr.current < history.length - 1) {
+      setHistory((prev) => [...prev.slice(0, curr.current + 1), canvas.toJSON()]);
+    } else {
+      setHistory((prev) => [...prev,  canvas.toJSON()]);
     }
-    historyRef.current.push(canvas.toJSON());
-    currRef.current++;
-    updateState();
+          setCurrState(canvas.toJSON());
+
+    curr.current = curr.current + 1;
   }
 
   function undo() {
-    console.log("Undo:", currRef.current);
-    if (currRef.current > 0) {
-      currRef.current--;
-      updateState();
-      return historyRef.current[currRef.current];
+
+    if (curr.current > 0) {
+      curr.current = curr.current - 1;
+      setCurrState(history[curr.current]);
+      return history[curr.current];
     }
+
     return null;
   }
 
   function redo() {
-    if (currRef.current < historyRef.current.length - 1) {
-      currRef.current++;
-      updateState();
-      return historyRef.current[currRef.current];
+    if (curr.current < history.length - 1) {
+      curr.current = curr.current + 1;
+      setCurrState(history[curr.current]);
+      return history[curr.current];
     }
     return null;
   }
 
-  return { undo, redo, saveState };
+  return {currState, undo, redo, saveState };
 }
 
 export default useHistory;
