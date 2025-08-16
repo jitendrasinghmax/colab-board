@@ -11,9 +11,9 @@ export default function ReadOnlyBoard() {
   const canvasRef = useRef(null);
   const [canvas, setCanvas] = useState(null);
 
-  const board = useQuery(api.board.getBoard, {roomId:params.id});
+  const board = useQuery(api.board.getBoard, {roomId:params.id})
  
-  // init canvas once
+  
     useEffect(() => {
         if (canvasRef.current || !canvas) {
             const { height, width } = { height: window.innerHeight, width: window.innerWidth }
